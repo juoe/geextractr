@@ -26,7 +26,7 @@ gee_match_extract(x, collection_name, select_bands, date_col = "date",
 
 \item{n_cores}{Number of cores to use for sending extraction calls in parallel; Default (NULL) indicates  no parallelization}
 
-\item{prefilter}{Whether to pre-filter the ImageCollection. Useful to speed up processing.}
+\item{prefilter}{Whether to pre-filter the ImageCollection (useful to speed up processing)}
 
 \item{prefilter_buffer}{How many days +- the target date should be included in pre-filtering?}
 }

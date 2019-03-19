@@ -8,7 +8,7 @@
 #' @param reducer_scale Scale of reducer in meters
 #' @param chunksize Size of chunks in which data is split to allow extracting values for large input datasets
 #' @param n_cores Number of cores to use for sending extraction calls in parallel; Default (NULL) indicates  no parallelization
-#' @param prefilter Whether to pre-filter the ImageCollection. Useful to speed up processing.
+#' @param prefilter Whether to pre-filter the ImageCollection (useful to speed up processing)
 #' @param prefilter_buffer How many days +- the target date should be included in pre-filtering?
 #'
 #' @return A sf/Spatial object with extracted values added
