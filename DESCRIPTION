@@ -1,0 +1,21 @@
+Package: earthengine
+Type: Package
+Title: Extract and download data from Google Earth Engine into R
+Version: 0.1.0
+Authors@R: person("Julian", "Oeser", email = "julian.oeser@gmail.com",
+                  role = c("aut", "cre"))
+Description: Extract and download data from Google Earth Engine into R
+Imports: 
+        doParallel,
+        dplyr,
+        foreach,
+        parallel,
+        purrr,
+        raster,
+        sf,
+        reticulate,
+        methods
+License: GPL (>= 2)
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
