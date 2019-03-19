@@ -4,13 +4,18 @@
 \alias{gee_extract}
 \title{Extract values of Images or ImageCollections through Google Earth Engine}
 \usage{
-gee_extract(x, image_name, reducer_name = "ee.Reducer.mean()",
-  reducer_scale = 30, chunksize = 2000, n_cores = NULL)
+gee_extract(x, image_name, select_bands = NULL, filter_date = NULL,
+  reducer_name = "ee.Reducer.mean()", reducer_scale = 30,
+  chunksize = 2000, n_cores = NULL)
 }
 \arguments{
 \item{x}{Locations (sf or sp object) used for extraction}
 
 \item{image_name}{Name of Image or ImageCollection}
+
+\item{select_bands}{Names of the image bands to select in Image or ImageCollection}
+
+\item{filter_date}{If image_name is an ImageCollection, character vector with dates; minimum date will be used as start, maximum date as end argumnet for filtering}
 
 \item{reducer_name}{Name of reducer}
 

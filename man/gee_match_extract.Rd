@@ -4,7 +4,7 @@
 \alias{gee_match_extract}
 \title{Extract values based on temporal matching finding closest Image in an ImageCollections through Google Earth Engine}
 \usage{
-gee_match_extract(x, collection_name, date_col = "date",
+gee_match_extract(x, collection_name, select_bands, date_col = "date",
   reducer_name = "ee.Reducer.mean()", reducer_scale = 30,
   chunksize = 2000, n_cores = NULL, prefilter = FALSE,
   prefilter_buffer = 20)
@@ -13,6 +13,8 @@ gee_match_extract(x, collection_name, date_col = "date",
 \item{x}{Locations (sf or sp object) used for extraction}
 
 \item{collection_name}{Name of ImageCollection}
+
+\item{select_bands}{Names of the image bands to select in ImageCollection}
 
 \item{date_col}{Name of date column (Required format: yyyy-mm-dd) used for matching; Default is 'date'}
 

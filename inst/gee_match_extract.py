@@ -6,6 +6,8 @@ import pandas
 
 def gee_match_extract_py(fc_filepath, reducer_scale, prefilter, prefilter_buffer):
 
+    global gee_object
+
     # helper function to convert feature collection to pandas data frame
     def fc2df(fc):
         features = fc.getInfo()['features']
@@ -68,6 +70,7 @@ def gee_match_extract_py(fc_filepath, reducer_scale, prefilter, prefilter_buffer
 
         return fc_points.map(reduce_feature)
 
-    ext = extract_layers(fc_points, collection)
+    gee_object = gee_object.filterBounds(fc_points.geometry())
+    ext = extract_layers(fc_points, gee_object)
 
     return fc2df(ext)

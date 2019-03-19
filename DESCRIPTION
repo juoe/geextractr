@@ -1,4 +1,4 @@
-Package: earthengine
+Package: geextractr
 Type: Package
 Title: Extract and download data from Google Earth Engine into R
 Version: 0.1.0

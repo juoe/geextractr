@@ -5,6 +5,8 @@ import pandas
 
 def gee_extract_py(fc_filepath, reducer_scale):
 
+    global gee_object
+
     def fc2df(fc):
         features = fc.getInfo()['features']
 
@@ -21,14 +23,18 @@ def gee_extract_py(fc_filepath, reducer_scale):
 
     fc_points = ee.FeatureCollection(locations['features'])
 
-    if image.name() == 'Image':
-        ext = image.reduceRegions(fc_points, reducer, reducer_scale)
-    elif image.name() == 'ImageCollection':
+    if gee_object.name() == 'Image':
+        ext = gee_object.reduceRegions(fc_points, reducer, reducer_scale)
+    elif gee_object.name() == 'ImageCollection':
+
+        gee_object = gee_object.filterBounds(fc_points.geometry())
+
         def reduce_img(img):
             def set_date(f):
                 return f.set('image_date', img.date().format("YYYY-MM-dd"))
-            return img.reduceRegions(fc_points, reducer, reducer_scale).map(set_date)
+            intersecting_points = fc_points.filterBounds(img.geometry())  #keep only features intersecting current image
+            return img.reduceRegions(intersecting_points, reducer, reducer_scale).map(set_date)
 
-        ext = image.map(reduce_img).flatten()
+        ext = gee_object.map(reduce_img).flatten()
 
     return fc2df(ext)

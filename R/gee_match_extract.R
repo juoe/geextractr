@@ -2,6 +2,7 @@
 #'
 #' @param x Locations (sf or sp object) used for extraction
 #' @param collection_name Name of ImageCollection
+#' @param select_bands Names of the image bands to select in ImageCollection
 #' @param date_col Name of date column (Required format: yyyy-mm-dd) used for matching; Default is 'date'
 #' @param reducer_name Name of reducer
 #' @param reducer_scale Scale of reducer in meters
@@ -14,11 +15,11 @@
 #' @export
 #'
 
-gee_match_extract <- function(x, collection_name, date_col = "date", reducer_name = "ee.Reducer.mean()", reducer_scale = 30, chunksize = 2000, n_cores = NULL, prefilter = FALSE, prefilter_buffer = 20) {
+gee_match_extract <- function(x, collection_name, select_bands, date_col = "date", reducer_name = "ee.Reducer.mean()", reducer_scale = 30, chunksize = 2000, n_cores = NULL, prefilter = FALSE, prefilter_buffer = 20) {
   # clear python environment
 
   # convert to sf if x is Spatial* object
-  is_spatial <- is(x, "Spatial")
+  is_spatial <- methods::is(x, "Spatial")
 
   if(is_spatial) {
     x <- sf::st_as_sf(x)
@@ -28,7 +29,7 @@ gee_match_extract <- function(x, collection_name, date_col = "date", reducer_nam
   crs_in <- sf::st_crs(x)
 
   if(crs_in$epsg != 4326){
-    x <- st_transform(x, 4326)
+    x <- sf::st_transform(x, 4326)
   }
 
   # rename date column if necessary
@@ -45,12 +46,18 @@ gee_match_extract <- function(x, collection_name, date_col = "date", reducer_nam
       sf::write_sf(xi, fc_filepath, delete_dsn = TRUE)
 
       # define function in python environment
-      script_path <- paste(system.file(package="earthengine"), "gee_match_extract.py", sep="/")
+      script_path <- paste(system.file(package="geextractr"), "gee_match_extract.py", sep="/")
       reticulate::source_python(script_path)
 
       # define image and reducer in python environment
-      reticulate::py_run_string(paste0("collection =", collection_name))
+      reticulate::py_run_string(paste0("gee_object =", collection_name))
       reticulate::py_run_string(paste0("reducer =", reducer_name))
+
+      # select image bands if provided
+      if(!is.null(select_bands)){
+        select_string <- paste(shQuote(select_bands), collapse = ",")
+        reticulate::py_run_string(paste0("gee_object = gee_object.select(", select_string, ")"))
+      }
 
       ext <- gee_match_extract_py(fc_filepath, reducer_scale, prefilter, prefilter_buffer)
 
@@ -76,11 +83,18 @@ gee_match_extract <- function(x, collection_name, date_col = "date", reducer_nam
                                  sf::write_sf(xi, fc_filepath, delete_dsn = TRUE)
 
                                  # define function in python environment
-                                 reticulate::source_python("python/gee_match_extract.py")
+                                 script_path <- paste(system.file(package="geextractr"), "gee_match_extract.py", sep="/")
+                                 reticulate::source_python(script_path)
 
                                  # define image and reducer in python environment
-                                 reticulate::py_run_string(paste0("collection =", collection_name))
+                                 reticulate::py_run_string(paste0("gee_object =", collection_name))
                                  reticulate::py_run_string(paste0("reducer =", reducer_name))
+
+                                 # select image bands if provided
+                                 if(!is.null(select_bands)){
+                                   select_string <- paste(shQuote(select_bands), collapse = ",")
+                                   reticulate::py_run_string(paste0("gee_object = gee_object.select(", select_string, ")"))
+                                 }
 
                                  ext <- gee_match_extract_py(fc_filepath, reducer_scale, prefilter, prefilter_buffer)
 
@@ -104,10 +118,10 @@ gee_match_extract <- function(x, collection_name, date_col = "date", reducer_nam
 
   # recover input attributes (Spatial* obejct / CRS)
   if(is_spatial) {
-    out <- as(x, "Spatial")
+    out <- methods::as(x, "Spatial")
   }
   if(crs_in$epsg != 4326){
-    out <- st_transform(out, crs_in$epsg)
+    out <- sf::st_transform(out, crs_in$epsg)
   }
   out
 
