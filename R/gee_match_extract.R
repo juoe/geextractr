@@ -15,7 +15,7 @@
 #' @export
 #'
 
-gee_match_extract <- function(x, collection_name, select_bands, date_col = "date", reducer_name = "ee.Reducer.mean()", reducer_scale = 30, chunksize = 2000, n_cores = NULL, prefilter = FALSE, prefilter_buffer = 20) {
+gee_match_extract <- function(x, collection_name, select_bands = NULL, date_col = "date", reducer_name = "ee.Reducer.mean()", reducer_scale = 30, chunksize = 2000, n_cores = NULL, prefilter = FALSE, prefilter_buffer = 20) {
   # clear python environment
 
   # convert to sf if x is Spatial* object
