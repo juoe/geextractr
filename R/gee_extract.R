@@ -6,7 +6,7 @@
 #' @param filter_date If image_name is an ImageCollection, character vector with dates; minimum date will be used as start, maximum date as end argumnet for filtering
 #' @param reducer_name Name of reducer
 #' @param reducer_scale Scale of reducer in meters
-#' @param tile_scale tileScale argument for reduceRegions
+#' @param tile_scale tileScale argument passed to reduceRegions
 #' @param chunksize Size of chunks in which data is split to allow extracting values for large input datasets
 #' @param n_cores Number of cores to use for sending extraction calls in parallel; Default (NULL) indicates  no parallelization
 #'

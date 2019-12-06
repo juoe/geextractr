@@ -25,7 +25,7 @@ gee_extract(x, image_name, select_bands = NULL, filter_date = NULL,
 
 \item{n_cores}{Number of cores to use for sending extraction calls in parallel; Default (NULL) indicates  no parallelization}
 
-\item{tile_scale}{tileScale argument for reduceRegions}
+\item{tile_scale}{tileScale argument passed to reduceRegions}
 }
 \value{
 A sf/Spatial object with extracted values added
