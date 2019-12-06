@@ -6,6 +6,7 @@
 #' @param filter_date If image_name is an ImageCollection, character vector with dates; minimum date will be used as start, maximum date as end argumnet for filtering
 #' @param reducer_name Name of reducer
 #' @param reducer_scale Scale of reducer in meters
+#' @param tile_scale tileScale argument for reduceRegions
 #' @param chunksize Size of chunks in which data is split to allow extracting values for large input datasets
 #' @param n_cores Number of cores to use for sending extraction calls in parallel; Default (NULL) indicates  no parallelization
 #'
@@ -13,7 +14,15 @@
 #' @export
 #'
 
-gee_extract <- function(x, image_name, select_bands = NULL, filter_date = NULL, reducer_name = "ee.Reducer.mean()", reducer_scale = 30, chunksize = 2000, n_cores = NULL) {
+gee_extract <- function(x,
+                        image_name,
+                        select_bands = NULL,
+                        filter_date = NULL,
+                        reducer_name = "ee.Reducer.mean()",
+                        reducer_scale = 30,
+                        chunksize = 2000,
+                        n_cores = NULL,
+                        tile_scale = 1) {
   # clear python environment
 
   # convert to sf if x is Spatial* object
@@ -47,13 +56,14 @@ gee_extract <- function(x, image_name, select_bands = NULL, filter_date = NULL, 
       reticulate::py_run_string(paste0("gee_object =", image_name))
       reticulate::py_run_string(paste0("reducer =", reducer_name))
 
+
       # select image bands if provided
       if(!is.null(select_bands)){
         select_string <- paste(shQuote(select_bands), collapse = ",")
         reticulate::py_run_string(paste0("gee_object = gee_object.select(", select_string, ")"))
       }
 
-      # check whether image_name is and ImageCollection
+      # check whether image_name is an ImageCollection
       is_ic <- grepl("ImageCollection", image_name)
 
       # apply temporal filter with .filterDate() if provided (only valid for ImageCollections)
@@ -67,7 +77,7 @@ gee_extract <- function(x, image_name, select_bands = NULL, filter_date = NULL, 
 
       }
 
-      ext <- gee_extract_py(fc_filepath, reducer_scale)
+      ext <- gee_extract_py(fc_filepath, reducer_scale, tile_scale)
 
       # add extracted columns to input object
       ext_dat <- dplyr::select(ext, dplyr::setdiff(colnames(ext), colnames(xi)))
@@ -129,7 +139,7 @@ gee_extract <- function(x, image_name, select_bands = NULL, filter_date = NULL, 
 
                                    }
 
-                                   ext <- gee_extract_py(fc_filepath, reducer_scale)
+                                   ext <- gee_extract_py(fc_filepath, reducer_scale, tile_scale)
 
                                    # add extracted columns to input object
                                    ext_dat <- dplyr::select(ext, dplyr::setdiff(colnames(ext), colnames(xi)))

@@ -6,7 +6,7 @@
 \usage{
 gee_extract(x, image_name, select_bands = NULL, filter_date = NULL,
   reducer_name = "ee.Reducer.mean()", reducer_scale = 30,
-  chunksize = 2000, n_cores = NULL)
+  chunksize = 2000, n_cores = NULL, tile_scale = 1)
 }
 \arguments{
 \item{x}{Locations (sf or sp object) used for extraction}
@@ -24,6 +24,8 @@ gee_extract(x, image_name, select_bands = NULL, filter_date = NULL,
 \item{chunksize}{Size of chunks in which data is split to allow extracting values for large input datasets}
 
 \item{n_cores}{Number of cores to use for sending extraction calls in parallel; Default (NULL) indicates  no parallelization}
+
+\item{tile_scale}{tileScale argument for reduceRegions}
 }
 \value{
 A sf/Spatial object with extracted values added

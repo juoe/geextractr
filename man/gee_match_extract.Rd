@@ -7,7 +7,7 @@
 gee_match_extract(x, collection_name, select_bands = NULL,
   date_col = "date", reducer_name = "ee.Reducer.mean()",
   reducer_scale = 30, chunksize = 2000, n_cores = NULL,
-  prefilter = FALSE, prefilter_buffer = 20)
+  prefilter = FALSE, prefilter_buffer = 20, tile_scale = 1)
 }
 \arguments{
 \item{x}{Locations (sf or sp object) used for extraction}
@@ -29,6 +29,8 @@ gee_match_extract(x, collection_name, select_bands = NULL,
 \item{prefilter}{Whether to pre-filter the ImageCollection (useful to speed up processing)}
 
 \item{prefilter_buffer}{How many days +- the target date should be included in pre-filtering?}
+
+\item{tile_scale}{tileScale argument for reduceRegions}
 }
 \value{
 A sf/Spatial object with extracted values added

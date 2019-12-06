@@ -6,6 +6,7 @@
 #' @param date_col Name of date column (Required format: yyyy-mm-dd) used for matching; Default is 'date'
 #' @param reducer_name Name of reducer
 #' @param reducer_scale Scale of reducer in meters
+#' @param tile_scale tileScale argument for reduceRegions
 #' @param chunksize Size of chunks in which data is split to allow extracting values for large input datasets
 #' @param n_cores Number of cores to use for sending extraction calls in parallel; Default (NULL) indicates  no parallelization
 #' @param prefilter Whether to pre-filter the ImageCollection (useful to speed up processing)
@@ -15,7 +16,17 @@
 #' @export
 #'
 
-gee_match_extract <- function(x, collection_name, select_bands = NULL, date_col = "date", reducer_name = "ee.Reducer.mean()", reducer_scale = 30, chunksize = 2000, n_cores = NULL, prefilter = FALSE, prefilter_buffer = 20) {
+gee_match_extract <- function(x,
+                              collection_name,
+                              select_bands = NULL,
+                              date_col = "date",
+                              reducer_name = "ee.Reducer.mean()",
+                              reducer_scale = 30,
+                              chunksize = 2000,
+                              n_cores = NULL,
+                              prefilter = FALSE,
+                              prefilter_buffer = 20,
+                              tile_scale = 1) {
   # clear python environment
 
   # convert to sf if x is Spatial* object
@@ -59,7 +70,7 @@ gee_match_extract <- function(x, collection_name, select_bands = NULL, date_col 
         reticulate::py_run_string(paste0("gee_object = gee_object.select(", select_string, ")"))
       }
 
-      ext <- gee_match_extract_py(fc_filepath, reducer_scale, prefilter, prefilter_buffer)
+      ext <- gee_match_extract_py(fc_filepath, reducer_scale, prefilter, prefilter_buffer, tile_scale)
 
       # add extracted columns to input object
       ext_dat <- dplyr::select(ext, dplyr::setdiff(colnames(ext), colnames(xi)))
@@ -96,7 +107,7 @@ gee_match_extract <- function(x, collection_name, select_bands = NULL, date_col 
                                    reticulate::py_run_string(paste0("gee_object = gee_object.select(", select_string, ")"))
                                  }
 
-                                 ext <- gee_match_extract_py(fc_filepath, reducer_scale, prefilter, prefilter_buffer)
+                                 ext <- gee_match_extract_py(fc_filepath, reducer_scale, prefilter, prefilter_buffer, tile_scale)
 
                                  # add extracted columns to input object
                                  ext_dat <- dplyr::select(ext, dplyr::setdiff(colnames(ext), colnames(xi)))

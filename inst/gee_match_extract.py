@@ -4,7 +4,7 @@ import json
 import pandas
 
 
-def gee_match_extract_py(fc_filepath, reducer_scale, prefilter, prefilter_buffer):
+def gee_match_extract_py(fc_filepath, reducer_scale, prefilter, prefilter_buffer, tile_scale):
 
     global gee_object
 
@@ -61,7 +61,8 @@ def gee_match_extract_py(fc_filepath, reducer_scale, prefilter, prefilter_buffer
             out = feature.set(matched_image.reduceRegion(
                 reducer = reducer,
                 geometry = feature.geometry(),
-                scale = reducer_scale)).set(
+                scale = reducer_scale,
+                tileScale = tile_scale)).set(
                 'image_date', matched_image.date().format("YYYY-MM-dd")
             )
 
