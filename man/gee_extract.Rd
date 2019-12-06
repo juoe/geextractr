@@ -17,7 +17,7 @@ gee_extract(x, image_name, select_bands = NULL, filter_date = NULL,
 
 \item{filter_date}{If image_name is an ImageCollection, character vector with dates; minimum date will be used as start, maximum date as end argumnet for filtering}
 
-\item{reducer_name}{Name of reducer}
+\item{reducer_name}{Name of reducer, default is: "ee.Reducer.mean()"}
 
 \item{reducer_scale}{Scale of reducer in meters}
 

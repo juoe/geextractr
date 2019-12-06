@@ -4,7 +4,7 @@
 #' @param image_name Name of Image or ImageCollection
 #' @param select_bands Names of the image bands to select in Image or ImageCollection
 #' @param filter_date If image_name is an ImageCollection, character vector with dates; minimum date will be used as start, maximum date as end argumnet for filtering
-#' @param reducer_name Name of reducer
+#' @param reducer_name Name of reducer, default is: "ee.Reducer.mean()"
 #' @param reducer_scale Scale of reducer in meters
 #' @param tile_scale tileScale argument passed to reduceRegions
 #' @param chunksize Size of chunks in which data is split to allow extracting values for large input datasets
